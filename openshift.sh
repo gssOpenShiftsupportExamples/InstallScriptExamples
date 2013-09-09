@@ -36,7 +36,7 @@ CONF_INSTALL_METHOD="rhsm"
   fi
 
 # Get Pool ID through a complicated proces...
-subscription-manager register
+subscription-manager register --username=$CONF_SM_REG_NAME --password=CONF_SM_REG_PASS
 CONF_SM_REG_POOL=$(subscription-manager list --available | grep -iA 8 openshift | grep -i pool | head -n 1 | cut -f2)
 subscription-manager unregister
 subscription-manager clean
