@@ -33,7 +33,7 @@ CONF_INSTALL_METHOD="rhsm"
   echo "Pool ID can be found by running \"subscription-manager list --available | grep -iA 8 openshift\" on a machine already registered with RHSM"
   read -p "RHSM Pool ID: " CONF_SM_REG_POOL
 
-  if [ $CONF_INSTALL_COMPONENTS == "all" ]; then
+  if [ $CONF_INSTALL_COMPONENTS =~ "[aA]ll" ]; then
     CONF_INSTALL_COMPONENTS="broker,named,activemq,datastore,node"
   fi
 
