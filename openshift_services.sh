@@ -22,7 +22,7 @@
 
 # Set RHSM as the installation method
 CONF_INSTALL_METHOD="rhsm"
-CONF_INSTALL_COMPONENTS="node"
+CONF_INSTALL_COMPONENTS="activemq,datastore"
 
 # Prompt for install information
   read -p "RedHat Username (rhn-support-whateva): " CONF_SM_REG_NAME
@@ -139,7 +139,7 @@ fi
 #CONF_BROKER_HOSTNAME="broker.example.com"
 #CONF_NODE_HOSTNAME="node.example.com"
 #CONF_NAMED_HOSTNAME="ns1.example.com"
-#CONF_ACTIVEMQ_HOSTNAME="activemq.example.com"
+CONF_ACTIVEMQ_HOSTNAME="datastore.$CONF_DOMAIN"
 #CONF_DATASTORE_HOSTNAME="mongodb.example.com"
 
 

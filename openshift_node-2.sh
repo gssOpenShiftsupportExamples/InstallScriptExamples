@@ -22,7 +22,7 @@
 
 # Set RHSM as the installation method
 CONF_INSTALL_METHOD="rhsm"
-CONF_INSTALL_COMPONENTS="broker,named"
+CONF_INSTALL_COMPONENTS="node"
 
 # Prompt for install information
   read -p "RedHat Username (rhn-support-whateva): " CONF_SM_REG_NAME
@@ -136,8 +136,8 @@ fi
 #   DNS entries for the hostnames of the other components being 
 #   installed on this host as well. If you are using a nameserver set
 #   up separately, you are responsible for all necessary DNS entries.
-CONF_BROKER_HOSTNAME="broker.$CONF_DOMAIN"
-#CONF_NODE_HOSTNAME="node.example.com"
+#CONF_BROKER_HOSTNAME="broker.example.com"
+CONF_NODE_HOSTNAME="node-2.$CONF_DOMAIN"
 #CONF_NAMED_HOSTNAME="ns1.example.com"
 #CONF_ACTIVEMQ_HOSTNAME="activemq.example.com"
 #CONF_DATASTORE_HOSTNAME="mongodb.example.com"
