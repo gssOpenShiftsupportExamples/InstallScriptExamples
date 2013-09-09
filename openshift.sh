@@ -30,12 +30,23 @@ CONF_INSTALL_METHOD="rhsm"
   read -p "Password: " -s CONF_SM_REG_PASS
   echo ""
   read -p "Domain name: " CONF_DOMAIN
-  echo "Pool ID can be found by running \"subscription-manager list --available | grep -iA 8 openshift\" on a machine already registered with RHSM"
-  read -p "RHSM Pool ID: " CONF_SM_REG_POOL
 
-  if [ $CONF_INSTALL_COMPONENTS =~ "[aA]ll" ]; then
+  if [[ $CONF_INSTALL_COMPONENTS =~ [aA]ll ]]; then
     CONF_INSTALL_COMPONENTS="broker,named,activemq,datastore,node"
   fi
+
+# Get Pool ID through a complicated proces...
+subscription-manager register
+CONF_SM_REG_POOL=$(subscription-manager list --available | grep -iA 8 openshift | grep -i pool | head -n 1 | cut -f2)
+subscription-manager unregister
+subscription-manager clean
+
+if [[ ! $CONF_SM_REG_POOL =~ ^[0-9a-zA-Z]+$ ]]; then
+  echo "Could no get Pool ID automatically."
+  echo "Please log into another machine already registered with subscription-manager and run the following command:"
+  echo "   $ subscription-manager list --available | grep -iA 8 openshift"
+  read -p "Then enter the pool id: " CONF_SM_REG_POOL
+fi
 
 # PARAMETER DESCRIPTIONS
 
