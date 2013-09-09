@@ -20,6 +20,23 @@
 # example, "domain=example.com" as a kickstart parameter would be
 # "CONF_DOMAIN=example.com" for the script.
 
+# Set RHSM as the installation method
+CONF_INSTALL_METHOD="rhsm"
+
+# Prompt for install information
+  echo "Possible components to install: broker,named,activemq,datastore,node or all"
+  read -p "Components to install(comma seperated, no spaces): " CONF_INSTALL_COMPONENTS
+  read -p "RedHat Username (rhn-support-whateva): " CONF_SM_REG_NAME
+  read -p "Password: " -s CONF_SM_REG_PASS
+  echo ""
+  read -p "Domain name: " CONF_DOMAIN
+  echo "Pool ID can be found by running \"subscription-manager list --available | grep -iA 8 openshift\" on a machine already registered with RHSM"
+  read -p "RHSM Pool ID: " CONF_SM_REG_POOL
+
+  if [ $CONF_INSTALL_COMPONENTS == "all" ]; then
+    CONF_INSTALL_COMPONENTS="broker,named,activemq,datastore,node"
+  fi
+
 # PARAMETER DESCRIPTIONS
 
 # install_components / CONF_INSTALL_COMPONENTS
