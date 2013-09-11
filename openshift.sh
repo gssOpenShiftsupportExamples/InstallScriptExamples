@@ -26,7 +26,7 @@ CONF_INSTALL_METHOD="rhsm"
 # Prompt for install information
   echo "Possible components to install: broker,named,activemq,datastore,node or all"
   read -p "Components to install(comma seperated, no spaces): " CONF_INSTALL_COMPONENTS
-  read -p "RedHat Username (rhn-support-whateva): " CONF_SM_REG_NAME
+  read -p "Red Hat Username: " CONF_SM_REG_NAME
   read -p "Password: " -s CONF_SM_REG_PASS
   echo ""
   read -p "Domain name: " CONF_DOMAIN
