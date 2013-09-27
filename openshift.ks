@@ -355,7 +355,7 @@ text
 skipx
 
 # NB: Be sure to change the password before running this script.
-rootpw  --iscrypted $6$QgevUVWY7.dTjKz6$jugejKU4YTngbFpfNlqrPsiE4sLJSj/ahcfqK8fE5lO0jxDhvdg59Qjk9Qn3vNPAUTWXOp9mchQDy6EV9.XBW1
+rootpw redhat
 
 lang en_US.UTF-8
 keyboard us
@@ -369,6 +369,8 @@ selinux --enforcing
 
 bootloader --location=mbr --driveorder=vda --append=" rhgb crashkernel=auto quiet console=ttyS0"
 
+zerombr
+ignoredisk --only-use=vda
 clearpart --all --initlabel
 firstboot --disable
 reboot
