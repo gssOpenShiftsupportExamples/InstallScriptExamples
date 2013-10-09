@@ -1,0 +1,9 @@
+[brokers]
+broker
+
+[services]
+service_node
+
+[nodes]
+node1
+node2

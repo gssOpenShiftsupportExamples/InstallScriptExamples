@@ -1,0 +1,31 @@
+---
+
+- name: Create OpenShift Virtual Machine
+  hosts: brokers
+  user: root
+  gather_facts: no
+
+  vars:
+     hypervisor: 127.0.0.1
+     qemu_img_path: /var/lib/libvirt/images
+     virtual_network_name: Nimbus 
+     vm_ram: 1024 
+     vm_vcpus: 1 
+     disk_size: 10240 
+     exploded_iso: http://porkchop.redhat.com/released/RHEL-6/6.4/Server/x86_64/os 
+     kickstart_file: https://raw.github.com/gssOpenShiftsupportExamples/InstallScriptExamples/master/openshift.ks 
+     rhn_user: rhn-support-edrich
+     rhn_pass: Totem0wl*
+     os_pool_id: 8a85f9813cf493fe013d028b6cf75b5a 
+     rhel_pool_id: 8a85f987411bd94601415ad6d2960720 
+
+  tasks:
+  
+  # This uses a custom plugin to create a virtual qcow2 disk on the Hypervisor.
+  - name: Allocate storage for Openshift Virtual Machine
+    action: qemu_img dest=${qemu_img_path}/${inventory_hostname}.img size=${disk_size} format=qcow2
+    delegate_to: ${hypervisor}
+
+  - name: Create OpenShift Virtual Machine
+    command: virt-install -n ${inventory_hostname} -r ${vm_ram} --vcpus ${vm_vcpus} --disk path=${qemu_img_path}/${inventory_hostname}.img --network network=${virtual_network_name},model=virtio --arch='x86_64' -l ${exploded_iso} -x "ks=${kickstart_file} noverifyssl install_method=rhsm install_components=node,broker,named,activemq,datastore sm_reg_name=${rhn_user} sm_reg_pass=${rhn_pass} sm_reg_pool=${os_pool_id} sm_reg_pool_rhel=${rhel_pool_id} broker_hostname=${inventory_hostname}" --vnc
+    delegate_to: ${hypervisor}
