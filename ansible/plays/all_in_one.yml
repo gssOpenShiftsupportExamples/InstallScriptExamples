@@ -14,8 +14,8 @@
      disk_size: 10240 
      exploded_iso: http://porkchop.redhat.com/released/RHEL-6/6.4/Server/x86_64/os 
      kickstart_file: https://raw.github.com/gssOpenShiftsupportExamples/InstallScriptExamples/master/openshift.ks 
-     rhn_user: rhn-support-edrich
-     rhn_pass: Totem0wl*
+     rhn_user: rhn-support-USER
+     rhn_pass: PASSWORD
      os_pool_id: 8a85f9813cf493fe013d028b6cf75b5a 
      rhel_pool_id: 8a85f987411bd94601415ad6d2960720 
 
