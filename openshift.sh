@@ -20,33 +20,72 @@
 # example, "domain=example.com" as a kickstart parameter would be
 # "CONF_DOMAIN=example.com" for the script.
 
-# Set RHSM as the installation method
-CONF_INSTALL_METHOD="rhsm"
+###########################
+# BEGIN MODIFICATIONS     #
+###########################
+
+# Set RHN as the installation method
+CONF_INSTALL_METHOD="rhn"
+
+# Set the activation key
+# This can be created following https://access.redhat.com/knowledge/solutions/2474
+CONF_RHN_REG_ACTKEY="a91947e41602a1e40df19ae72ee060f0"
 
 # Prompt for install information
   echo "Possible components to install: broker,named,activemq,datastore,node or all"
   read -p "Components to install(comma seperated, no spaces): " CONF_INSTALL_COMPONENTS
-  read -p "Red Hat Username: " CONF_SM_REG_NAME
-  read -p "Password: " -s CONF_SM_REG_PASS
   echo ""
+  read -p "Red Hat Customer Portal Username: " CONF_RHN_REG_NAME
+  read -p "Red Hat Customer Portal Password: " -s CONF_RHN_REG_PASS
+  echo ""; echo ""
+  read -p "Initial Openshift Username: " CONF_OPENSHIFT_USER1 
+  read -p "Initial Openshift Password: " -s CONF_OPENSHIFT_PASSWORD1
+  echo ""; echo ""
   read -p "Domain name: " CONF_DOMAIN
 
+# Allow for the "all" option when prompting for components to install
   if [[ $CONF_INSTALL_COMPONENTS =~ [aA]ll ]]; then
     CONF_INSTALL_COMPONENTS="broker,named,activemq,datastore,node"
   fi
 
-# Get Pool ID through a complicated proces...
-subscription-manager register --username=$CONF_SM_REG_NAME --password=$CONF_SM_REG_PASS
-CONF_SM_REG_POOL=$(subscription-manager list --available | grep -iA 8 openshift | grep -i pool | head -n 1 | cut -f2)
-subscription-manager unregister
-subscription-manager clean
-
-if [[ ! $CONF_SM_REG_POOL =~ ^[0-9a-zA-Z]+$ ]]; then
-  echo "Could no get Pool ID automatically."
-  echo "Please log into another machine already registered with subscription-manager and run the following command:"
-  echo "   $ subscription-manager list --available | grep -iA 8 openshift"
-  read -p "Then enter the pool id: " CONF_SM_REG_POOL
+# Confirm that everything is correct
+echo ""
+echo "##################################################"
+echo "Components to be installed:       $CONF_INSTALL_COMPONENTS"
+echo "Installation method:              $CONF_INSTALL_METHOD"
+echo "Domain name:                      $CONF_DOMAIN"
+echo "Red Hat Customer Portal Username: $CONF_RHN_REG_NAME"
+echo "Initial Openshift Username:       $CONF_OPENSHIFT_USER1" 
+echo "##################################################"
+echo ""
+read -n 1 -p "Does this look okay? [y/n] " CONFIRM
+echo ""
+if [ $CONFIRM != "y" ] && [ $CONFIRM != "n" ]; then
+  echo -e "Invalid input, exiting"
+  exit 1
+elif [ $CONFIRM == "n" ]; then
+  echo "Re-run to reconfigure"
+  exit 1
 fi
+
+# Get Pool ID with subscription manager  through a complicated proces...
+# subscription-manager register --username=$CONF_SM_REG_NAME --password=$CONF_SM_REG_PASS
+# CONF_SM_REG_POOL=$(subscription-manager list --available | grep -iA 8 openshift | grep -i pool | head -n 1 | cut -f2)
+# subscription-manager unregister
+# subscription-manager clean
+
+# if [[ ! $CONF_SM_REG_POOL =~ ^[0-9a-zA-Z]+$ ]]; then
+#   echo "Could no get Pool ID automatically."
+#   echo "Please log into another machine already registered with subscription-manager and run the following command:"
+#   echo "   $ subscription-manager list --available | grep -iA 8 openshift"
+#   read -p "Then enter the pool id: " CONF_SM_REG_POOL
+# fi
+
+
+###########################
+# END MODIFICATIONS       #
+###########################
+
 
 # PARAMETER DESCRIPTIONS
 
@@ -2131,7 +2170,7 @@ case "$CONF_INSTALL_METHOD" in
     ;;
   (rhn)
      echo "Register with RHN using an activation key"
-     rhnreg_ks --activationkey=${CONF_RHN_REG_ACTKEY} --profilename=${hostname} || exit 1
+     rhnreg_ks --activationkey=${CONF_RHN_REG_ACTKEY} --profilename=${hostname} || echo "If this does not work, change CONF_RHN_REG_ACTKEY to a working activation key created on the customer portal." && exit 1
 
      # RHN method for setting yum priorities and excludes:
      RHNPLUGINCONF="/etc/yum/pluginconf.d/rhnplugin.conf"
