@@ -2170,7 +2170,16 @@ case "$CONF_INSTALL_METHOD" in
     ;;
   (rhn)
      echo "Register with RHN using an activation key"
-     rhnreg_ks --activationkey=${CONF_RHN_REG_ACTKEY} --profilename=${hostname} || echo "If this does not work, change CONF_RHN_REG_ACTKEY to a working activation key created on the customer portal." && exit 1
+     rhnreg_ks --activationkey=${CONF_RHN_REG_ACTKEY} --profilename=${hostname} --force
+
+#############
+# GSS EDITS #
+#############     
+if [ $? != 0 ]; then
+  echo "If this does not work, change CONF_RHN_REG_ACTKEY to a working activation key created on the customer portal."
+  exit 1
+fi
+#############
 
      # RHN method for setting yum priorities and excludes:
      RHNPLUGINCONF="/etc/yum/pluginconf.d/rhnplugin.conf"
